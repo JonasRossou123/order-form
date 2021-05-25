@@ -96,6 +96,12 @@
                     &euro; <?php echo number_format($product['price'], 2) ?></label><br />
             <?php endforeach; ?>
         </fieldset>
+        <?php if (!empty($orderErr)){?>
+            <div class="alert alert-warning" role="alert">
+                <p><?php echo $orderErr ?></p>
+            </div>
+        <?php }?>
+
 
         <label>
             <input type="checkbox" name="express_delivery" value="5" />
@@ -105,8 +111,21 @@
         <button type="submit" class="btn btn-primary">Order!</button>
     </form>
 
-    <footer>You already ordered <strong>&euro; <?php echo $totalValue ?></strong> in food and drinks.</footer>
+    <footer>You already ordered <strong>&euro; <?php if (isset($_SESSION["totalvalue"])) {echo $_SESSION["totalvalue"];} else {echo "0";} ?></strong> in food and drinks.
+    <br />
+        <?php
+        echo $time;
+        ?>
+
+    </footer>
+
 </div>
+
+<?php
+echo $time;
+?>
+
+
 <?php whatIsHappening()?>
 
 <style>

@@ -42,7 +42,8 @@ $totalValue = 0;
 session_start();
 
 
-$email = $street = $number = $city = $zip = "";
+$email = $street = $number = $city = $zip = $order = "";
+$time = "Delivery time will be 2 hours";
 
 if (isset($_SESSION["email"])){
     $email = $_SESSION["email"];
@@ -62,13 +63,16 @@ if (isset($_SESSION["zipcode"])){
 
 
 
+
+
 //validate that the field e-mail is filled in and a valid e-mail address once the order!button is pushed
 
 
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-    $emailErr = $streetErr = $numberErr = $cityErr = $zipErr = "";
+    $emailErr = $streetErr = $numberErr = $cityErr = $zipErr = $orderErr = "";
+    $order = [];
 
 
     if (empty($_POST["email"])) {
@@ -136,10 +140,35 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
 
-    if (empty($emailErr) && empty($streetErr) && empty($numberErr) && empty($cityErr) && empty($zipErr)){
+
+    if(empty($_POST["products"])){
+        $orderErr = "Please order something";
+    }
+    else {
+            $order =  $_POST["products"];
+            $_SESSION["order"] = $order;
+    }
+
+    if (empty($emailErr) && empty($streetErr) && empty($numberErr) && empty($cityErr) && empty($zipErr) && empty($orderErr)){
         $success = "Your order has been sent";
+        foreach ($_POST["products"] as $key => $value){
+            $totalValue += ($products[$key]['price']);
+
+
+            }
+        if (!empty($_POST["express_delivery"])){
+            $time = "Delivery time will be 45 minutes";
+            $totalValue += 5;
+            $_SESSION["totalvalue"] += $totalValue;
+        }
+        else {
+            $_SESSION["totalvalue"] += $totalValue;
+        }
     }
 }
+
+
+
 
 function test_input($data){
     $data = trim($data); //delete whitespace beginning
