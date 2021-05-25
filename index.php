@@ -36,14 +36,21 @@ if (isset($_GET['food']) && $_GET['food'] == 0) {
     ];
 }
 
-$totalValue = 0;
+
 
 //we are going to use session variables so we need to enable sessions
 session_start();
 
+$totalValue = 0;
 
 $email = $street = $number = $city = $zip = $order = "";
-$time = "Delivery time will be 2 hours";
+
+$time = date('Y-m-d H:i:s', time() + 14400);
+if (!isset($_COOKIE["ctotalvalue"])){
+    setcookie("ctotalvalue", "0",time() + (86400 * 30), "/");
+    header("Location: http://order-form.localhost");
+    exit;
+}
 
 if (isset($_SESSION["email"])){
     $email = $_SESSION["email"];
@@ -147,24 +154,29 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     else {
             $order =  $_POST["products"];
             $_SESSION["order"] = $order;
+
+
     }
 
     if (empty($emailErr) && empty($streetErr) && empty($numberErr) && empty($cityErr) && empty($zipErr) && empty($orderErr)){
         $success = "Your order has been sent";
+        $totalValue = $_COOKIE["ctotalvalue"];
         foreach ($_POST["products"] as $key => $value){
             $totalValue += ($products[$key]['price']);
-
-
             }
         if (!empty($_POST["express_delivery"])){
-            $time = "Delivery time will be 45 minutes";
+            $time = date('Y-m-d H:i:s', time() + 9900);
             $totalValue += 5;
-            $_SESSION["totalvalue"] += $totalValue;
+            setcookie("ctotalvalue","$totalValue",time() + (86400 * 30), "/");
+
         }
         else {
-            $_SESSION["totalvalue"] += $totalValue;
+            setcookie("ctotalvalue","$totalValue",time() + (86400 * 30), "/");
         }
+        header("Location: http://order-form.localhost");
+        exit;
     }
+
 }
 
 
