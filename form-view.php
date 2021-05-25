@@ -113,7 +113,7 @@
 
     <footer>You already ordered <strong>&euro; <?php if (isset($_COOKIE["ctotalvalue"])) {echo $_COOKIE["ctotalvalue"];} else {echo "0";} ?></strong> in food and drinks.
     <br />
-        Delivery time will be around <?php echo $time;?>
+        <?php if (isset($_SESSION["time"])){echo "Delivery time will be around "; echo $_SESSION["time"];}?>
     </footer>
 
 </div>

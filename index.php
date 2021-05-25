@@ -16,7 +16,7 @@ function whatIsHappening()
     var_dump($_COOKIE);
     echo '<h2>$_SESSION</h2>';
     var_dump($_SESSION);
-}
+    }
 
 //your products with their price.
 $products = [
@@ -36,8 +36,6 @@ if (isset($_GET['food']) && $_GET['food'] == 0) {
     ];
 }
 
-
-
 //we are going to use session variables so we need to enable sessions
 session_start();
 
@@ -45,7 +43,6 @@ $totalValue = 0;
 
 $email = $street = $number = $city = $zip = $order = "";
 
-$time = date('Y-m-d H:i:s', time() + 14400);
 if (!isset($_COOKIE["ctotalvalue"])){
     setcookie("ctotalvalue", "0",time() + (86400 * 30), "/");
     header("Location: http://order-form.localhost");
@@ -165,12 +162,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $totalValue += ($products[$key]['price']);
             }
         if (!empty($_POST["express_delivery"])){
-            $time = date('Y-m-d H:i:s', time() + 9900);
+            $_SESSION["time"] = date('Y-m-d H:i:s', time() + 9900);
             $totalValue += 5;
             setcookie("ctotalvalue","$totalValue",time() + (86400 * 30), "/");
 
         }
         else {
+            $_SESSION["time"] = date('Y-m-d H:i:s', time() + 14400);
             setcookie("ctotalvalue","$totalValue",time() + (86400 * 30), "/");
         }
         header("Location: http://order-form.localhost");
